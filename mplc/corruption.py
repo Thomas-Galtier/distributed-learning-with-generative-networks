@@ -273,10 +273,29 @@ class Duplication(Corruption):
         logger.debug(f"   Partner #{self.partner.id}: Done.")
 
 
+class CompressInputs(Corruption):
+    name = 'Compress inputs'
+
+    def apply(self):
+        self.generate_matrix()
+        self.partner.x_train /= 0.75
+        logger.debug(f"   Partner #{self.partner.id}: Done.")
+
+class ShiftMirrorInputs(Corruption):
+    name = 'Shift mirror inputs'
+
+    def apply(self):
+        self.generate_matrix()
+        self.partner.x_train -= 0.25
+        self.partner.x_train = np.absolute(self.partner.x_train)
+        logger.debug(f"   Partner #{self.partner.id}: Done.")
+
 IMPLEMENTED_CORRUPTION = {'not-corrupted': NoCorruption,
                           'duplication': Duplication,
                           'permutation': Permutation,
                           'random': Randomize,
                           'random-uniform': RandomizeUniform,
                           'permutation-circular': PermutationCircular,
-                          'redundancy': Redundancy}
+                          'redundancy': Redundancy,
+                          'Compress inputs': CompressInputs,
+                          'Shift mirror inputs': ShiftMirrorInputs}
